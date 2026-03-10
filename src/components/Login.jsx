@@ -5,8 +5,8 @@
 // @version: "1.0.0 2026-03-11"
 //====================================
 
-import {React, useState} from "react";
-import { API_URLS} from "../config.js";
+import { React, useState } from "react";
+import { API_URLS } from "../config.js";
 
 const isValidEmail = (email) => {
     const emailRegex = /^[^@/a]+@[^@/s]+\.[^@/s]+$/;
@@ -15,13 +15,15 @@ const isValidEmail = (email) => {
 
 const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isValidEmail())
+    if (!isValidEmail(email)) {
+        console.log("Hello!");
+    }
 }
 
 export const Login = () => {
     return
     <div>
-        
-        <input/>
+
+        <input />
     </div>
 }
