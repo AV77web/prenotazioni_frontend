@@ -6,7 +6,10 @@
 //====================================
 
 import { React, useState } from "react";
-import { API_URLS } from "../config.js";
+import { API_URLS } from "../../config.js";
+import {useAuth} from '../../components/Context/AuthContext.jsx';
+import { loginUser} from '../../api.js';
+
 
 const isValidEmail = (email) => {
     const emailRegex = /^[^@/a]+@[^@/s]+\.[^@/s]+$/;
@@ -20,10 +23,11 @@ const handleSubmit = async (e) => {
     }
 }
 
-export const Login = () => {
+const Login = () => {
     return
     <div>
-
         <input />
     </div>
 }
+
+export default Login;

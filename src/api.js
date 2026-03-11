@@ -117,3 +117,22 @@ export const logoutUser = async () => {
         return { message: 'Logout effettuato lato client' };
     }
 };
+
+/**
+ * API pubblica per verificare una prenotazione tramite codice.
+ * Non richiede autenticazione.
+ * @param {string} codice - Codice prenotazione fornito al cliente
+ * @returns {Promise<Object>} - { data, orario, campo, stato } oppure errore
+ */
+export const verificaPrenotazione = async (codice) => {
+    const url = `${API_BASE_URL}/verifica-prenotazione?codice=${encodeURIComponent(codice)}`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    return handleResponse(response);
+};

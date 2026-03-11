@@ -4,7 +4,6 @@ export const API_BASE_URL = isDevelopment
   ? "http://localhost:8083"
   : "https://backend-21ia.onrender.com";
 
-
 export const API_URLS = {
   BASE: API_BASE_URL,
   LOGIN: `${API_BASE_URL}/login`,
