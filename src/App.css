@@ -55,33 +55,10 @@ body {
 /* Dashboard */
 .dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #310261 100%);
+  background-color: #cccccc;
   padding: 20px;
 }
 
-.dashboard-header {
-  background: white;
-  border-radius: 16px;
-  padding: 30px 40px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  animation: slideDown 0.4s ease-out;
-}
-
-.header-left h1 {
-  font-size: 28px;
-  color: #1a202c;
-  margin: 0;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
 
 .user-name {
   font-size: 16px;
@@ -129,5 +106,36 @@ body {
   transform: translateY(0);
 }
 
+/* Verifica pernotazione */
+
+
+
+.card{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center
+}
+
+/*.verifica-prenotazione-card {
+
+}*/
+
+
+input {
+  padding: 15px;
+  margin: 5px;
+  border-radius: 5px;
+  color: white;
+  border: none; 
+  outline: none;
+  border-bottom: 1px solid transparent; 
+}
+
+input:focus,
+input:active {
+  border-bottom: 5px solid #FFD700;
+  border-left: 5px solid #FFD700;
+}
 
 

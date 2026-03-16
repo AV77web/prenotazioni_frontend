@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { AuthProvider, useAuth } from "./components/Context/AuthContext";
-import { loginUser, verificaPrenotazione } from "./api.js";
-
+import { Header } from "./components/Header/Header.jsx";
+import { Table } from "./components/Table/Table.jsx";
+import { VerificaPrenotazione } from "./components/VerificaPrenotazione.jsx/VerificaPrenotazione.jsx";
+import "./App.css";
 /**
  * Dashboard principale sempre visibile.
  * In alto a destra: login operatore / utente loggato + logout.
@@ -9,54 +11,8 @@ import { loginUser, verificaPrenotazione } from "./api.js";
  */
 const Dashboard = () => {
   const { user, login, logout, isAuthenticated, loading } = useAuth();
-
-  // Stato per il login inline
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const [loginLoading, setLoginLoading] = useState(false);
-
-  // Stato per la verifica prenotazione
-  const [codice, setCodice] = useState("");
-  const [verificaLoading, setVerificaLoading] = useState(false);
-  const [verificaError, setVerificaError] = useState("");
-  const [prenotazione, setPrenotazione] = useState(null);
-
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-    setLoginError("");
-    setLoginLoading(true);
-    try {
-      const data = await loginUser(email, password);
-      // Adegua la struttura a ciò che ritorna il backend (es. data.operatore)
-      const userData = data.operatore || data.user || null;
-      if (!userData) {
-        throw new Error("Risposta login non valida");
-      }
-      login(userData);
-      setEmail("");
-      setPassword("");
-    } catch (err) {
-      setLoginError(err.message || "Errore durante il login");
-    } finally {
-      setLoginLoading(false);
-    }
-  };
-
-  const handleVerificaSubmit = async (e) => {
-    e.preventDefault();
-    setVerificaError("");
-    setPrenotazione(null);
-    setVerificaLoading(true);
-    try {
-      const data = await verificaPrenotazione(codice);
-      setPrenotazione(data);
-    } catch (err) {
-      setVerificaError(err.message || "Prenotazione non trovata");
-    } finally {
-      setVerificaLoading(false);
-    }
-  };
+  // Stato per attivare gestione clienti-campi-prrenotazioni-operatori
+  const [activeView, setActiveView] = useState("home"); //"clienti", "prenotazioni", "campi", "operatori"
 
   if (loading) {
     return (
@@ -70,71 +26,40 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <div className="header-left">
-          <h1>Gestione Prenotazioni</h1>
-        </div>
-        <div className="header-right">
-          {isAuthenticated() ? (
-            <>
-              <span className="user-name">
-                👤 {user?.nome} {user?.cognome}
-              </span>
-              <button onClick={logout} className="btn-logout">
-                Logout
-              </button>
-            </>
-          ) : (
-            <form onSubmit={handleLoginSubmit} className="inline-login-form">
-              <input
-                type="email"
-                placeholder="Email operatore"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button type="submit" disabled={loginLoading}>
-                {loginLoading ? "Login..." : "Login"}
-              </button>
-              {loginError && <span className="error-text">{loginError}</span>}
-            </form>
-          )}
-        </div>
+        <Header activeView={activeView} setActiveView={setActiveView} />
       </div>
 
-      {/* Sezione pubblica: verifica prenotazione */}
       <div className="dashboard-content">
-        <section className="card verifica-prenotazione-card">
-          <h2>Verifica la tua prenotazione</h2>
-          <p>Inserisci il codice prenotazione ricevuto al momento della richiesta.</p>
-          <form onSubmit={handleVerificaSubmit} className="verifica-form">
-            <input
-              type="text"
-              placeholder="Codice prenotazione"
-              value={codice}
-              onChange={(e) => setCodice(e.target.value)}
-            />
-            <button type="submit" disabled={verificaLoading || !codice.trim()}>
-              {verificaLoading ? "Verifica in corso..." : "Verifica"}
-            </button>
-          </form>
-          {verificaError && <p className="error-text">{verificaError}</p>}
-          {prenotazione && (
-            <div className="prenotazione-dettaglio">
-              <h3>Dettaglio prenotazione</h3>
-              <p><strong>Data:</strong> {prenotazione.data}</p>
-              <p><strong>Orario:</strong> {prenotazione.orario}</p>
-              <p><strong>Campo:</strong> {prenotazione.campo}</p>
-              <p><strong>Stato:</strong> {prenotazione.stato}</p>
-            </div>
-          )}
-        </section>
+        {/* Sezione pubblica: verifica prenotazione (solo se non loggato e vista home) */}
+        {!loading && activeView === 'home' && !isAuthenticated() && (
+          <VerificaPrenotazione />
+        )}
 
-        {/* Qui puoi aggiungere altre sezioni della dashboard, esposte o solo per operatori */}
+        {/* Tabelle gestione (solo se loggato) */}
+        {!loading && isAuthenticated() && activeView === 'clienti' && (
+          <Table
+            title="Clienti"
+            endpoint={'clienti'}
+          />
+        )}
+        {!loading && isAuthenticated() && activeView === 'prenotazioni' && (
+          <Table
+            title="Prenotazioni"
+            endpoint={'prenotazione'}
+          />
+        )}
+        {!loading && isAuthenticated() && activeView === 'campi' && (
+          <Table
+            title="Campi"
+            endpoint={'campi'}
+          />
+        )}
+        {!loading && isAuthenticated() && activeView === 'operatori' && (
+          <Table
+            title="Operatori"
+            endpoint={'operatore'}
+          />
+        )}
       </div>
     </div>
   );

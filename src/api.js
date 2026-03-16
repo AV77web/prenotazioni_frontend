@@ -5,10 +5,10 @@
 // @version: 2.0.0 2026-01-14
 // =================================================
 
-const API_BASE_URL = import.meta.env.PROD
+export const API_BASE_URL = import.meta.env.PROD
     ? "https://prova-esame-s1-backend.onrender.com"
     : "http://localhost:8083";
-
+export const DATABASE_URL = "http://localhost:8081"
 /**
  * Funzione di utilità per gestire le risposte delle API
  */
@@ -36,7 +36,8 @@ export const loginUser = async (email, password) => {
             'Content-Type': 'application/json',
         },
         credentials: 'include', // FONDAMENTALE: invia e riceve cookie HttpOnly
-        body: JSON.stringify({ email, password }),
+        // Il backend si aspetta chiavi con iniziale maiuscola: Email, Password
+        body: JSON.stringify({ Email: email, Password: password }),
     });
 
     return handleResponse(response);
